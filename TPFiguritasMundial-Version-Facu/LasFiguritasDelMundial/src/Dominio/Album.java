@@ -108,26 +108,21 @@ public class Album {
 
 		} while (yaEstabaPegada);
 
-		// Agregar la nueva figurita al álbum
+		//Agregar la nueva figurita al álbum
 		figuritasPegadas[cantidadPegadas] = nuevaFigurita;
 		cantidadPegadas++;
 
-		// Busca en el arreglo de figuritas repetidas la figurita que se desea
-		// intercambiar
+		//Busca en el array de figuritas repetidas la figurita que se desea intercambiar
 		for (int i = 0; i < cantidadRepetidas; i++) {
 
 			if (figuritasRepetidas[i].getCodigo().equals(figuritaIntercambiable.getCodigo())) {
 
-				// Desplaza una posición hacia la izquierda todas las figuritas
-				// que están después de la figurita encontrada para eliminarla
-				// del arreglo sin dejar espacios vacíos.
+				//Desplaza una posición hacia la izquierda todas las figuritas que están después de la figurita encontrada para eliminarla del arreglo sin dejar espacios vacíos.
 				for (int j = i; j < cantidadRepetidas - 1; j++) {
 					figuritasRepetidas[j] = figuritasRepetidas[j + 1];
 				}
 
-				// La última posición queda duplicada luego del desplazamiento,
-				// por eso se la establece en null y se disminuye la cantidad
-				// de figuritas repetidas almacenadas.
+				//La última posición queda duplicada luego del desplazamiento, por eso se la establece en null y se disminuye la cantidad de figuritas repetidas almacenadas.
 				figuritasRepetidas[cantidadRepetidas - 1] = null;
 				cantidadRepetidas--;
 			}

@@ -43,7 +43,7 @@ public class Interfaz {
 		switch (opcionElegida) {
 			case INICIAR_ALBUM:
 				System.out.println("\nINICIALIZAMOS EL ALBUM\n\n");
-				//Llama al metodo
+				//Llama al metodo para arrancar el
 				album2026.inicializarAlbum();
 				break;
 			case COMPRAR_SOBRE:
@@ -59,28 +59,60 @@ public class Interfaz {
 					album2026.pegarFiguritas(nuevoSobre); //Le manda el sobre que se abrió para pasar a la inserción de las figuritas nuevas o repetidas
 				}
 				break;
+
 			case INTERCAMBIAR_FIGURITAS:
 				//Comprueba que exista una instancia válida del álbum antes de operar
 				if (album2026.getFiguritasPegadas() == null) {
 					System.out.println("\nPRIMERO SE DEBE INICIALIZAR EL ALBUM\n\n");
+
 				//Valida que el contador del array de repetidas sea mayor a cero
 				} else if (album2026.getCantidadRepetidas() != 0) {
 					System.out.println("\nESTAS SON SUS FIGURITAS REPETIDAS:");
-				//Itera sobre el array de figuritas repetidas basándose en su cantidad actual
+
+					//Itera sobre el array de figuritas repetidas basándose en su cantidad actual
 					for (int i = 0; i < album2026.getCantidadRepetidas(); i++) {
 						System.out.println((i + 1) + "- " + album2026.getFiguritasRepetidas()[i].getCodigo());
 					}
-					System.out.println("Indique que figurita desea intercambiar: ");
-					int figuritaElegida = teclado.nextInt();
-					//Extrae la figurita seleccionada del array restando una unidad al índice ingresado
+
+					int figuritaElegida = -1;
+					boolean entradaValida = false;
+
+					//Un while infinito hasta que ponga bien la opcion
+					while (!entradaValida) {
+						System.out.print("\nIndique qué figurita desea intercambiar: ");
+
+						//hasNextInt() CHEQUEA si lo ingresado es un número SIN usarlo todavía
+						if (teclado.hasNextInt()) {
+							figuritaElegida = teclado.nextInt(); //Ahora sí lo lee
+
+							//Valida que el número esté dentro del rango de figuritas repetidas
+							if (figuritaElegida >= 1 && figuritaElegida <= album2026.getCantidadRepetidas()) {
+								entradaValida = true; //Acá da ok
+							} else {
+								System.out.println("Error: Ingrese un número de la lista (entre 1 y " + album2026.getCantidadRepetidas() + ").");
+							}
+						} else {
+							//Si no es un número entero (es una letra o un símbolo)
+							System.out.println("Error: Por favor, ingrese un número entero válido.");
+							teclado.next(); //Limpiamos la entrada incorrecta para evitar un loop infinito
+						}
+					}
+
+					//Trae la figurita seleccionada del array
 					Figurita figuritaAIntercambiar = album2026.getFiguritasRepetidas()[figuritaElegida - 1];
+
 					//Procesa el intercambio y devuelve una nueva instancia de tipo Figurita
 					Figurita figuritaNueva = album2026.intercambiarFiguritas(figuritaAIntercambiar);
-					System.out.println(figuritaAIntercambiar + "\n intercambiada por la \n" + figuritaNueva);
+					System.out.println("\n¡Intercambio exitoso!");
+					System.out.println(figuritaAIntercambiar + "\n intercambiada por la \n" + figuritaNueva + "\n");
+
 				} else {
 					System.out.println("\nUSTED NO TIENE FIGURITAS REPETIDAS TODAVIA\n\n");
 				}
 				break;
+
+
+
 			case VISUALIZAR_ALBUM:
 				//Verifica la existencia del álbum antes de intentar recorrer los datos
 				if (album2026.getFiguritasPegadas() == null) {
@@ -103,15 +135,14 @@ public class Interfaz {
 
 	//Acá le digo que agarre la opción que coincida con el número ID ingresado
 	private static Menum elegirOpcion(Menum[] menuOpciones, Scanner teclado) {
-		//Lee la entrada como String para evitar que se rompa con letras
-		String entrada = teclado.next();
 		int opcionSeleccionada;
 
-		try {
-			//Acá conviete el texto a número entero
-			opcionSeleccionada = Integer.parseInt(entrada);
-		} catch (NumberFormatException e) {
-			//Si no es un número (si ingresó 'r')
+		//Lee la entrada como String para evitar que se rompa con letras
+		if (teclado.hasNextInt()) {
+			opcionSeleccionada = teclado.nextInt();
+		} else {
+			//Si metió texto (por ejemplo 'r'), libera entrada de texto para que no se bugge
+			teclado.next();
 			return Menum.OPCION_INVALIDA;
 		}
 
@@ -123,6 +154,10 @@ public class Interfaz {
 		}
 		return Menum.OPCION_INVALIDA;
 	}
+
+
+
+
 
 	//Este tiene que mosyrar todas las opciones válidas (evitando imprimir la OPCION_INVALIDA)
 	private static void mostrarOpciones(Menum[] menuOpciones) {
